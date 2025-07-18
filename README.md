@@ -6,7 +6,7 @@ This project contains two classic games: a web-based Tower Defense game and a Py
 
 Interested in learning how to use AI for development? Check out our hands-on seminar plan for a fun introduction to "vibe coding" with the Gemini CLI.
 
-[**View the Seminar Plan](./SEMINAR.md)**
+[**View the Seminar Plan**](./SEMINAR.md)
 
 ---
 
