@@ -203,6 +203,14 @@ function drawLives() {
     ctx.fillText(livesText, canvas.width - livesTextWidth - 8, 20);
 }
 
+function drawAIModeInstruction() {
+    ctx.font = '14px Arial';
+    ctx.fillStyle = '#0095DD';
+    const aiText = aiMode ? 'AI Mode: ON (Press A to toggle)' : 'AI Mode: OFF (Press A to toggle)';
+    const aiTextWidth = ctx.measureText(aiText).width;
+    ctx.fillText(aiText, (canvas.width - aiTextWidth) / 2, 45);
+}
+
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawBricks();
@@ -211,6 +219,7 @@ function draw() {
     drawPaddle();
     drawScore();
     drawLives();
+    drawAIModeInstruction();
     collisionDetection();
 
     if (aiMode) {
