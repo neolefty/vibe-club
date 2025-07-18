@@ -39,13 +39,13 @@ const brickInfo = {
     offsetLeft: 30
 };
 
-const brickColors = ['#FF5733', '#33FF57', '#3357FF', '#FF33A1', '#A133FF'];
+const brickColors = ['#A133FF', '#FF33A1', '#3357FF', '#33FF57', '#FF5733'];
 
 const bricks = [];
 for (let c = 0; c < brickInfo.columnCount; c++) {
     bricks[c] = [];
     for (let r = 0; r < brickInfo.rowCount; r++) {
-        bricks[c][r] = { x: 0, y: 0, status: 1 };
+        bricks[c][r] = { x: 0, y: 0, status: 1, health: brickInfo.rowCount - r };
     }
 }
 
@@ -72,8 +72,11 @@ function collisionDetection() {
                     ball.y < b.y + brickInfo.height
                 ) {
                     ball.dy = -ball.dy;
-                    b.status = 0;
-                    score++;
+                    b.health--;
+                    if (b.health === 0) {
+                        b.status = 0;
+                        score++;
+                    }
                     if (score === brickInfo.rowCount * brickInfo.columnCount) {
                         gameWon = true;
                     }
@@ -133,7 +136,7 @@ function drawBricks() {
                 bricks[c][r].y = brickY;
                 ctx.beginPath();
                 ctx.rect(brickX, brickY, brickInfo.width, brickInfo.height);
-                ctx.fillStyle = brickColors[r];
+                ctx.fillStyle = brickColors[bricks[c][r].health - 1];
                 ctx.fill();
                 ctx.closePath();
             }
