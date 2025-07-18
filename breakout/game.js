@@ -36,9 +36,10 @@ const brickInfo = {
     height: 20,
     padding: 10,
     offsetTop: 30,
-    offsetLeft: 30,
-    color: '#0095DD'
+    offsetLeft: 30
 };
+
+const brickColors = ['#FF5733', '#33FF57', '#3357FF', '#FF33A1', '#A133FF'];
 
 const bricks = [];
 for (let c = 0; c < brickInfo.columnCount; c++) {
@@ -132,7 +133,7 @@ function drawBricks() {
                 bricks[c][r].y = brickY;
                 ctx.beginPath();
                 ctx.rect(brickX, brickY, brickInfo.width, brickInfo.height);
-                ctx.fillStyle = brickInfo.color;
+                ctx.fillStyle = brickColors[r];
                 ctx.fill();
                 ctx.closePath();
             }
