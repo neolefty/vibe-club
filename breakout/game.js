@@ -225,9 +225,23 @@ function drawAIModeInstruction() {
     ctx.fillText(aiText, (canvas.width - aiTextWidth) / 2, 45);
 }
 
+function drawAIModeOverlay() {
+    if (aiMode) {
+        ctx.fillStyle = 'rgba(0, 149, 221, 0.1)'; // Faint transparent blue
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.font = '72px Arial';
+        ctx.fillStyle = 'rgba(0, 149, 221, 0.3)';
+        const overlayText = 'AI MODE';
+        const overlayTextWidth = ctx.measureText(overlayText).width;
+        ctx.fillText(overlayText, (canvas.width - overlayTextWidth) / 2, canvas.height / 2);
+    }
+}
+
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawBricks();
+    drawAIModeOverlay();
     drawBallTrail();
     drawBall();
     drawPaddle();
