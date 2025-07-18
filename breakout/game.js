@@ -74,6 +74,15 @@ function mouseMoveHandler(e) {
     }
 }
 
+// Function to generate a random number with a normal distribution (Box-Muller transform)
+function getRandomNormal(mean = 0, stdDev = 1) {
+    let u = 0, v = 0;
+    while (u === 0) u = Math.random(); // Converting [0,1) to (0,1)
+    while (v === 0) v = Math.random();
+    const z = Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
+    return z * stdDev + mean;
+}
+
 function collisionDetection() {
     // Ball and brick collision
     for (let c = 0; c < brickInfo.columnCount; c++) {
@@ -117,6 +126,11 @@ function collisionDetection() {
         // Ball and paddle collision
         if (ball.x > paddle.x && ball.x < paddle.x + paddle.width) {
             let collidePoint = ball.x - (paddle.x + paddle.width / 2);
+            if (aiMode) {
+                // Introduce randomness to AI paddle hits
+                const randomOffset = getRandomNormal(0, 0.4); // Mean 0, Std Dev 0.4 (adjust as needed)
+                collidePoint += randomOffset * paddle.width / 2;
+            }
             collidePoint = collidePoint / (paddle.width / 2);
             const angle = (collidePoint * Math.PI) / 3;
             const currentSpeed = Math.sqrt(ball.dx * ball.dx + ball.dy * ball.dy);
