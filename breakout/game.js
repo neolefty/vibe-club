@@ -8,6 +8,7 @@ let gameOver = false;
 let gameWon = false;
 let highScore = localStorage.getItem('breakoutHighScore') ? parseInt(localStorage.getItem('breakoutHighScore')) : 0;
 const ballTrail = [];
+let aiMode = false;
 
 // Paddle
 const paddle = {
@@ -53,6 +54,18 @@ for (let c = 0; c < brickInfo.columnCount; c++) {
 
 // Event listeners
 document.addEventListener('mousemove', mouseMoveHandler);
+document.addEventListener('keydown', keyDownHandler);
+
+function keyDownHandler(e) {
+    if (e.key === 'a' || e.key === 'A') {
+        aiMode = !aiMode;
+        if (aiMode) {
+            document.removeEventListener('mousemove', mouseMoveHandler);
+        } else {
+            document.addEventListener('mousemove', mouseMoveHandler);
+        }
+    }
+}
 
 function mouseMoveHandler(e) {
     const relativeX = e.clientX - canvas.offsetLeft;
@@ -200,6 +213,16 @@ function draw() {
     drawLives();
     collisionDetection();
 
+    if (aiMode) {
+        paddle.x = ball.x - paddle.width / 2;
+        if (paddle.x < 0) {
+            paddle.x = 0;
+        }
+        if (paddle.x + paddle.width > canvas.width) {
+            paddle.x = canvas.width - paddle.width;
+        }
+    }
+
     ballTrail.push({ x: ball.x, y: ball.y });
     if (ballTrail.length > 15) {
         ballTrail.shift(); // Remove the oldest position
@@ -216,7 +239,8 @@ function draw() {
         ctx.font = '48px Arial';
         ctx.fillStyle = '#0095DD';
         const message = gameOver ? 'GAME OVER' : 'YOU WIN!';
-        ctx.fillText(message, canvas.width / 2 - (message.length * 12), canvas.height / 2 - 30);
+        const messageWidth = ctx.measureText(message).width;
+        ctx.fillText(message, (canvas.width - messageWidth) / 2, canvas.height / 2 - 30);
         ctx.font = '24px Arial';
         ctx.fillText('Click to start a new game', canvas.width / 2 - 150, canvas.height / 2 + 20);
         return;
