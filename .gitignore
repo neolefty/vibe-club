@@ -1,3 +1,4 @@
 *screenshot*.png
 .envrc
 logs/
+.DS_Store

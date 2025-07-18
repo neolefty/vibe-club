@@ -2,6 +2,14 @@
 
 This project contains two classic games: a web-based Tower Defense game and a Python-based Snake game.
 
+## Vibe Coding Seminar
+
+Interested in learning how to use AI for development? Check out our hands-on seminar plan for a fun introduction to "vibe coding" with the Gemini CLI.
+
+[**View the Seminar Plan](./SEMINAR.md)**
+
+---
+
 ## Tower Defense
 
 This is a simple tower defense game that runs in the browser.
