@@ -6,6 +6,8 @@ let score = 0;
 let lives = 3;
 let gameOver = false;
 let gameWon = false;
+let highScore = localStorage.getItem('breakoutHighScore') ? parseInt(localStorage.getItem('breakoutHighScore')) : 0;
+const ballTrail = [];
 
 // Paddle
 const paddle = {
@@ -130,6 +132,20 @@ function drawBall() {
     ctx.closePath();
 }
 
+function drawBallTrail() {
+    for (let i = 0; i < ballTrail.length; i++) {
+        const trailPoint = ballTrail[i];
+        const opacity = (i / ballTrail.length) * 0.8; // Fade out older points
+        const radius = ball.radius * (i / ballTrail.length) * 0.8; // Shrink older points
+
+        ctx.beginPath();
+        ctx.arc(trailPoint.x, trailPoint.y, radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(0, 149, 221, ${opacity})`; // Use ball color with varying opacity
+        ctx.fill();
+        ctx.closePath();
+    }
+}
+
 function drawPaddle() {
     ctx.beginPath();
     ctx.rect(paddle.x, paddle.y, paddle.width, paddle.height);
@@ -160,6 +176,7 @@ function drawScore() {
     ctx.font = '16px Arial';
     ctx.fillStyle = '#0095DD';
     ctx.fillText('Score: ' + score, 8, 20);
+    ctx.fillText('High Score: ' + highScore, 8, 40);
 }
 
 function drawLives() {
@@ -171,31 +188,67 @@ function drawLives() {
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawBricks();
+    drawBallTrail();
     drawBall();
     drawPaddle();
     drawScore();
     drawLives();
     collisionDetection();
 
+    ballTrail.push({ x: ball.x, y: ball.y });
+    if (ballTrail.length > 15) {
+        ballTrail.shift(); // Remove the oldest position
+    }
+
     ball.x += ball.dx;
     ball.y += ball.dy;
 
-    if (gameOver) {
+    if (gameOver || gameWon) {
+        if (score > highScore) {
+            highScore = score;
+            localStorage.setItem('breakoutHighScore', highScore);
+        }
         ctx.font = '48px Arial';
         ctx.fillStyle = '#0095DD';
-        ctx.fillText('GAME OVER', canvas.width / 2 - 150, canvas.height / 2);
-        return;
-    }
-
-    if (gameWon) {
-        ctx.font = '48px Arial';
-        ctx.fillStyle = '#0095DD';
-        ctx.fillText('YOU WIN!', canvas.width / 2 - 100, canvas.height / 2);
+        const message = gameOver ? 'GAME OVER' : 'YOU WIN!';
+        ctx.fillText(message, canvas.width / 2 - (message.length * 12), canvas.height / 2 - 30);
+        ctx.font = '24px Arial';
+        ctx.fillText('Click to start a new game', canvas.width / 2 - 150, canvas.height / 2 + 20);
         return;
     }
 
 
     requestAnimationFrame(draw);
 }
+
+function restartGame() {
+    score = 0;
+    lives = 3;
+    gameOver = false;
+    gameWon = false;
+
+    ball.x = canvas.width / 2;
+    ball.y = canvas.height - 30;
+    ball.dx = 4;
+    ball.dy = -4;
+    ball.speed = 4;
+
+    paddle.x = canvas.width / 2 - 50;
+
+    for (let c = 0; c < brickInfo.columnCount; c++) {
+        for (let r = 0; r < brickInfo.rowCount; r++) {
+            bricks[c][r].status = 1;
+            bricks[c][r].health = brickInfo.rowCount - r;
+        }
+    }
+    ballTrail.length = 0; // Clear the ball trail
+    draw();
+}
+
+canvas.addEventListener('click', () => {
+    if (gameOver || gameWon) {
+        restartGame();
+    }
+});
 
 draw();
