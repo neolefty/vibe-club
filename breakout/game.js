@@ -77,6 +77,13 @@ function collisionDetection() {
                         b.status = 0;
                         score++;
                     }
+                    
+                    // Adjust ball speed
+                    const newSpeed = 4 + (brickInfo.rowCount - r) * 0.5;
+                    const currentSpeed = Math.sqrt(ball.dx * ball.dx + ball.dy * ball.dy);
+                    ball.dx = (ball.dx / currentSpeed) * newSpeed;
+                    ball.dy = (ball.dy / currentSpeed) * newSpeed;
+
                     if (score === brickInfo.rowCount * brickInfo.columnCount) {
                         gameWon = true;
                     }
