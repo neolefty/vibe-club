@@ -101,7 +101,12 @@ function collisionDetection() {
     } else if (ball.y + ball.dy > canvas.height - ball.radius) {
         // Ball and paddle collision
         if (ball.x > paddle.x && ball.x < paddle.x + paddle.width) {
-            ball.dy = -ball.dy;
+            let collidePoint = ball.x - (paddle.x + paddle.width / 2);
+            collidePoint = collidePoint / (paddle.width / 2);
+            const angle = (collidePoint * Math.PI) / 3;
+            const currentSpeed = Math.sqrt(ball.dx * ball.dx + ball.dy * ball.dy);
+            ball.dx = currentSpeed * Math.sin(angle);
+            ball.dy = -currentSpeed * Math.cos(angle);
         } else {
             lives--;
             if (!lives) {
